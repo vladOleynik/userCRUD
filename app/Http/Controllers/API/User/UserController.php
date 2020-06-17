@@ -3,20 +3,30 @@
 namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\User\UserStoreRequest;
+use App\Http\Resources\Api\User\UserResource;
+use App\Models\User;
+use App\Services\API\User\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
+    private $service;
+
+    public function __construct(UserService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
         try {
-
+            return UserResource::collection(User::paginate());
         } catch (\Throwable $exception) {
             return response(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -26,12 +36,11 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
         try {
-
+            return new UserResource($this->service->createUser($request));
         } catch (\Throwable $exception) {
             return response(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -41,12 +50,11 @@ class UserController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         try {
-
+            return new UserResource(User::find($id));
         } catch (\Throwable $exception) {
             return response(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }

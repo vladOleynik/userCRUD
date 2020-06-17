@@ -57,7 +57,7 @@ class UserController extends Controller
     public function show($id)
     {
         try {
-            $user = User::find($id);
+            $user = User::findOrFail($id);
         } catch (\Throwable $exception) {
             return response(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }

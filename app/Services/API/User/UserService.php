@@ -16,14 +16,14 @@ class UserService
 
     public function updateUser(Request $request, int $idUser): User
     {
-        $user = User::find($idUser);
+        $user = User::findOrFail($idUser);
         $user->update($request->all());
         return $user;
     }
 
     public function destroyUser(int $idUser): void
     {
-        $user = User::find($idUser);
+        $user = User::findOrFail($idUser);
         $user->delete();
     }
 }

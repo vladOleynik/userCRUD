@@ -27,10 +27,11 @@ class UserController extends Controller
     public function index()
     {
         try {
-            return UserResource::collection(User::paginate());
+            $collectUser = User::paginate();
         } catch (\Throwable $exception) {
             return response(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+        return UserResource::collection($collectUser);
     }
 
     /**
@@ -41,10 +42,11 @@ class UserController extends Controller
     public function store(UserStoreRequest $request)
     {
         try {
-            return new UserResource($this->service->createUser($request));
+            $user = $this->service->createUser($request);
         } catch (\Throwable $exception) {
             return response(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+        return new UserResource($user);
     }
 
     /**
@@ -55,10 +57,11 @@ class UserController extends Controller
     public function show($id)
     {
         try {
-            return new UserResource(User::find($id));
+            $user = User::find($id);
         } catch (\Throwable $exception) {
             return response(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+        return new UserResource($user);
     }
 
     /**
@@ -70,10 +73,11 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, $id)
     {
         try {
-            return new UserResource($this->service->updateUser($request, $id));
+            $user = $this->service->updateUser($request, $id);
         } catch (\Throwable $exception) {
             return response(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+        return new UserResource($user);
     }
 
     /**
@@ -85,9 +89,10 @@ class UserController extends Controller
     public function destroy($id)
     {
         try {
-
+            $this->service->destroyUser($id);
         } catch (\Throwable $exception) {
             return response(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+        return \response(['status' => 'success', 'message' => 'user deleted']);
     }
 }

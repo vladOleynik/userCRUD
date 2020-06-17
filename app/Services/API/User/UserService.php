@@ -11,13 +11,14 @@ class UserService
 {
     public function createUser(Request $request): User
     {
-        return User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'birthday' => $request->birthday,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
+        return User::create($request->all());
+    }
+
+    public function updateUser(Request $request, int $idUser): User
+    {
+
+        $user = User::find($idUser);
+        $user->update($request->all());
+        return $user;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\UserStoreRequest;
+use App\Http\Requests\Api\User\UserUpdateRequest;
 use App\Http\Resources\Api\User\UserResource;
 use App\Models\User;
 use App\Services\API\User\UserService;
@@ -65,12 +66,11 @@ class UserController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
         try {
-
+            return new UserResource($this->service->updateUser($request, $id));
         } catch (\Throwable $exception) {
             return response(['status' => 'error', 'message' => $exception->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
